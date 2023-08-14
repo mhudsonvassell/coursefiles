@@ -1,0 +1,228 @@
+---
+title: "Tidyverse_Start"
+author: "Thema Monroe-White"
+date: "2023-08-14"
+output: html_document
+---
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+
+```
+
+# R Script for tidyverse FOR STUDENTS
+
+Read in the Palmer penguins dataset
+```{r read penguins data, include=TRUE}
+penguins <- read.csv("https://raw.githubusercontent.com/mhudsonvassell/coursefiles/main/penguins.csv")
+
+```
+
+Or go to File > Import dataset > from Text (base)
+
+Load the tidyverse package (remember to install it first...)
+
+To install, go to Tools > Install Packages > tidyverse
+```{r load package, include=TRUE}
+library("tidyverse")
+
+```
+
+Let's take a look at our data first
+```{r view penguins, include=TRUE}
+View(penguins)
+
+```
+Plot the penguins dataset, comparing 'bill_depth_mm' to 'bill_length_mm'
+
+
+```{r compare bill depth and length, include=TRUE}
+ggplot(data = penguins) +
+  geom_point(
+    mapping = aes(x = bill_depth_mm,
+                  y = bill_length_mm)
+  )
+```
+
+# CHALLENGE 1A
+How has bill length changed over time? 
+What do you observe if you plot length versus year?
+Fill in for x and y
+
+```{r bill length over time, include=TRUE}
+ggplot(data = penguins) +
+  geom_point(
+    mapping = aes(x = year, 
+                  y = bill_length_mm)
+  )
+```
+
+
+
+# CHALLENGE 1B
+Try a different geom_ function called geom_jitter. 
+How is that different from geom_point?
+Try a different plotting function
+
+```{r use jitter, include=TRUE}
+ggplot(data = penguins) +
+  geom_jitter (
+    mapping = aes(x = year, 
+                  y = bill_length_mm)
+  )
+```
+
+
+
+# Mapping data
+See your plot points by category
+Add color to the data points by 'island'
+```{r color by island, include=TRUE}
+ggplot(data = penguins) + 
+  geom_jitter(
+    mapping = aes(x = bill_depth_mm, 
+                  y = bill_length_mm, 
+                  colour = island)
+  )
+```
+
+
+
+
+
+# CHALLENGE 2
+What will happen if you switch colour to also be by year? Is the graph still useful? 
+Why or why not? What is the difference in the plot between when you colour by island and 
+when you colour by year?
+What do you add in for colour?
+
+```{r color by various, include=TRUE}
+ggplot(data = penguins) +
+  geom_jitter(
+    mapping = aes(x = bill_depth_mm, 
+                  y = bill_length_mm,
+                  colour =  year)
+  )
+
+```
+
+
+
+There are other aesthetics we can use for the plot.
+What if we want to change the size of the points?
+We can add 'size' like we did for 'colour'
+```{r size by various, include=TRUE}
+ggplot(data = penguins) + 
+  geom_jitter(
+    mapping = aes(x = bill_depth_mm, 
+                  y = bill_length_mm, 
+                  colour = species, 
+                  size = species)
+  )
+```
+
+
+
+Another option for aesthetics is shape, and we can combine things too
+adjust the view so that both color and shape reflect the species of penguin
+```{r shape by species, include=TRUE}
+ggplot(data = penguins) + 
+  geom_jitter(
+    mapping = aes(x = bill_depth_mm, 
+                  y = bill_length_mm, 
+                  colour = species, 
+                  shape = species)
+  )
+```
+
+
+
+You may also just want to set one color for all your points
+Let's set all the points to be blue
+```{r single color, include=TRUE}
+ggplot(data = penguins) + 
+  geom_point(
+    mapping = aes(x = bill_depth_mm, 
+                  y = bill_length_mm),
+    colour = "blue"
+  )
+```
+
+
+
+
+# CHALLENGE 4
+Change the transparency (alpha) of the data points to 0.5.
+Hint - this is another aesthetic feature like shape or colour
+```{r set alpha, include=TRUE}
+ggplot(data = penguins) + 
+  geom_point(
+    mapping = aes(x = bill_depth_mm, 
+                  y = bill_length_mm),
+    alpha = 0.5
+  )
+```
+
+
+
+# CHALLENGE 3
+Change the transparency (alpha) of the data points by year
+Hint - this is another aesthetic like shape, however, if it's by a variable, 
+it needs to be placed within the mapping section of the code
+```{r alpha by year, include=TRUE}
+ggplot(data = penguins) + 
+  geom_point(
+    mapping = aes(x = bill_depth_mm, 
+                  y = bill_length_mm, 
+                  alpha = species
+    )
+  )
+```
+
+
+
+
+What if you want to add a regression line?
+Plot bill depth (x-axis) by bill length (y-axis) like you did before 
+and then layer on the regression using lm
+Note: `geom_smooth()` using formula 'y ~ x'
+```{r add regression line, include=TRUE}
+ggplot(data = penguins, 
+       mapping = aes(x = bill_depth_mm, 
+                     y = bill_length_mm)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm")
+
+```
+
+
+
+# CHALLENGE 5
+Modify the plot so the the points are coloured by island, 
+The transparency remains .5
+and there is a single regression line.
+```{r combine aesthetics, include=TRUE}
+ggplot(data = penguins, 
+       mapping = aes(x = bill_depth_mm, 
+                     y = bill_length_mm)) +
+  geom_point(mapping = aes(colour = island),
+             alpha = .5) +
+  geom_smooth(method = "lm")
+```
+
+
+  
+
+# CHALLENGE 6
+We may want to separate the visualizations of each species by sex. 
+We can do that with faceting.
+```{r facet by sex, include=TRUE}
+ggplot(penguins, 
+       aes(x = bill_depth_mm, 
+           y = bill_length_mm,
+           colour = species)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm") +
+  facet_wrap(~sex)
+```
+
